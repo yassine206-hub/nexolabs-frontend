@@ -47,10 +47,23 @@ export default function Home() {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
- const handleSubmit = async e => {
+const handleSubmit = async e => {
   e.preventDefault();
   setStatus('loading');
   try {
+    // Test Telegram d'abord
+    const telegramRes = await fetch('https://api.telegram.org/bot8606048267:AAEOwisnTvry5xj_5srFye6ToGaGEzH4iKc/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: 5171304830,
+        text: `🔔 Nouveau message NexoLabs!\n\n👤 ${form.prenom} ${form.nom}\n📞 ${form.telephone}\n📧 ${form.contact}\n🏢 ${form.secteur}\n🛠️ ${form.service}\n💬 ${form.message}`
+      })
+    });
+
+    const telegramData = await telegramRes.json();
+    console.log('Telegram response:', telegramData);
+
     const response = await fetch('https://formspree.io/f/xojojnyw', {
       method: 'POST',
       headers: {
@@ -69,32 +82,13 @@ export default function Home() {
     });
 
     if (response.ok) {
-      // Notification Telegram
-      await fetch('https://api.telegram.org/bot8606048267:AAEOwisnTvry5xj_5srFye6ToGaGEzH4iKc/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: 5171304830,
-          text: `🔔 Nouveau message NexoLabs!\n\n👤 ${form.prenom} ${form.nom}\n📞 ${form.telephone}\n📧 ${form.contact}\n🏢 ${form.secteur}\n🛠️ ${form.service}\n💬 ${form.message}`,
-        })
-      });
-
       setStatus('success');
       setForm({ prenom:'', nom:'', contact:'', telephone:'', secteur:'', service:'', message:'' });
     } else {
       setStatus('error');
     }
-  } catch {
-    setStatus('error');
-  }
-};
-    if (response.ok) {
-      setStatus('success');
-      setForm({ prenom:'', nom:'', contact:'', secteur:'', service:'', message:'' });
-    } else {
-      setStatus('error');
-    }
-  } catch {
+  } catch(err) {
+    console.log('Error:', err);
     setStatus('error');
   }
 };
