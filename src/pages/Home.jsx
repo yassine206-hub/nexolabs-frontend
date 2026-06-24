@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+  import { useState, useEffect, useRef } from 'react';
 import api from '../api';
 
 export default function Home() {
@@ -8,9 +8,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [form, setForm] = useState({
-    prenom:'', nom:'', contact:'', secteur:'', service:'', message:''
-  });
+  const [form, setForm] = useState({ prenom:'', nom:'', contact:'', telephone:'', secteur:'', service:'', message:'' });
   const [status, setStatus] = useState(null);
   const [visible, setVisible] = useState({});
   const heroRef = useRef(null);
@@ -63,6 +61,7 @@ export default function Home() {
         prenom: form.prenom,
         nom: form.nom,
         contact: form.contact,
+        telephone: form.telephone,
         secteur: form.secteur,
         service: form.service,
         message: form.message
@@ -745,6 +744,11 @@ export default function Home() {
                 <label className="nx-form-label">Email ou WhatsApp</label>
                 <input className="nx-form-input" name="contact" value={form.contact}
                   onChange={handleChange} required placeholder="contact@monentreprise.ma"/>
+              </div>
+              <div className="nx-form-group">
+                <label className="nx-form-label">Numéro de téléphone</label>
+                <input className="nx-form-input" type="tel" name="telephone" value={form.telephone}
+                  onChange={handleChange} required placeholder="0612 345 678"/>
               </div>
               <div className="nx-form-group">
                 <label className="nx-form-label">Votre secteur d'activité</label>
