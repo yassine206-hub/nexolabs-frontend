@@ -49,16 +49,35 @@ export default function Home() {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setStatus('loading');
-    try {
-      await api.post('/contact', form);
+ const handleSubmit = async e => {
+  e.preventDefault();
+  setStatus('loading');
+  try {
+    const response = await fetch('https://formspree.io/f/xojojnyw', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        prenom: form.prenom,
+        nom: form.nom,
+        contact: form.contact,
+        secteur: form.secteur,
+        service: form.service,
+        message: form.message
+      })
+    });
+    if (response.ok) {
       setStatus('success');
       setForm({ prenom:'', nom:'', contact:'', secteur:'', service:'', message:'' });
-    } catch { setStatus('error'); }
-  };
-
+    } else {
+      setStatus('error');
+    }
+  } catch {
+    setStatus('error');
+  }
+};
   const fadeUp = id => ({
     opacity: visible[id] ? 1 : 0,
     transform: visible[id] ? 'translateY(0)' : 'translateY(40px)',
